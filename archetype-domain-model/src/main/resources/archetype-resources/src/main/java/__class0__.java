@@ -1,4 +1,4 @@
-package ${packageImports}
+package ${package};
 
 import java.io.Serializable;
 

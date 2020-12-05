@@ -25,7 +25,7 @@
 
 # Maven
 **/target/*
-**/bin/*
+#**/bin/*
 /local
 dependency-reduced-pom.xml
 /target/
