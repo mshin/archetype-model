@@ -7,6 +7,7 @@
 .settings
 .classpath
 .settings/**
+.factorypath
 
 # Netbeans
 /nbproject
@@ -27,3 +28,6 @@
 **/bin/*
 /local
 dependency-reduced-pom.xml
+/target/
+/.apt_generated/
+/.apt_generated_tests/
