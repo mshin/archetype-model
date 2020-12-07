@@ -1,0 +1,21 @@
+# GAV:(list)(colon delimited)
+#  gav:(list)(colon delimited)
+#    modelName:(list)
+#      typeField:(list)(colon delimited)
+#      imports:(calculated list)(colon delimited)
+---
+archetypeGAV: com.github.mshin:archetype-domain-model:0.0.1
+generatedGav: com.github.mshin:domain-model
+author: MunChul Shin
+model: 
+    - name: DomainModel0
+      fields: 
+          - String:Field1
+          - String:Field2
+          - Integer:Field3
+    - name: DomainModel1
+      fields:
+          - Integer:Field1
+          - String:Field2
+          - boolean:Field3
+          - int:Field4

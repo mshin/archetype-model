@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * @author MunChul Shin
+ * @author ${author}
  */
 @Data @AllArgsConstructor
 public class ${class0} implements Serializable {
