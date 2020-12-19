@@ -21,7 +21,8 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 
- * For lazy initialized fields, exclude from the toString. @ToString.Exclude
+ * For lazy initialized fields, exclude from the toString.
+ * @ToString.Exclude @Getter(lazy = true)
  * 
  * Do not add generated id to hashCode. https://hibernate.atlassian.net/browse/HHH-3799
  * @Id @EqualsAndHashCode.Exclude
@@ -33,8 +34,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @NoArgsConstructor
 @Entity
-@Table( name = "${entity_name}" )
-public class ${class0}Entity {
+@Table( name = "entity_name" )
+public class ${class0} {
 
     ${fields}
 
