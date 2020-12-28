@@ -59,7 +59,7 @@ do
     fields=$(yq r -d$2 $1 "model[${i}].fields[*]")
     pk_field=$(yq r -d$2 $1 "model[${i}].pk")
 
-    field_string=$(${dir}/create_fields_with_annotations.sh "${fields}" "${pk_field}")
+    field_string=$(${dir}/create_entity_fields_w_annotations.sh "${fields}" "${pk_field}")
 
     # replace newline with carrots in field_string because sed has problem processing \n
     # shouldn't need to do this here, but if there is an error, some newlines could make their way through.

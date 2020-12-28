@@ -46,9 +46,9 @@ generate_maven_project () {
       -DarchetypeGroupId="${GAV_arr[0]}"       \
       -DarchetypeArtifactId="${GAV_arr[1]}"    \
       -DarchetypeVersion="${GAV_arr[2]}"       \
-      -DgroupId="${groupId}"                           \
-      -DartifactId="${artifiactId}"                        \
-      -Dpackage="$groupId.${artifiactId//-/.}"                 \
+      -DgroupId="${groupId}"                   \
+      -DartifactId="${artifiactId}"            \
+      -Dpackage="$groupId.${artifiactId//-/.}" \
       -Dclass0="class0"                        \
       -Dfields="fields"                        \
       -Dauthor="$author"                       \
