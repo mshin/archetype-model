@@ -1,64 +1,9 @@
 #!/bin/bash
 
-create_imports_string () {
-    
-    field_line_arr=($1)
-    for m in "${field_arr[@]}"
-    do
-        echo $m
-    done
-}
+# $1: yaml descriptor path; $2 document number
 
-declare -a type_arr field_arr
-get_fields_and_types () {
-    type_st=$(sed "s/:.*$//" <<< "${1}")
-    field_st=$(sed "s/^.*://" <<< "${1}")
-    type_arr=(${type_st//$'\n'/ })
-    field_arr=(${field_st//$'\n'/ })
-}
-
-declare field_string
-create_field_string () {
-    field_string=""
-    # replace colon with \s
-    field_string=${1//:/ }
-    # add '    private ' to the beginning of each line
-    field_string=$(sed "s/^/    private /" <<< "${field_string}")
-    # add semicolon to the end of each line
-    field_string=$(sed "s/$/;/" <<< "${field_string}")
-}
-
-create_field_string_with_annotations () {
-    output=""
-    k=0
-    while IFS="" read -r p || [ -n "$p" ]
-    do
-        output+="&%${field_arr[$k]}&%^"
-        output+="${p}^^"
-        ((k++))
-    done <<< "${field_string}"
-    field_string="${output}"
-}
-
-# $1=camelcase variable
-convert_camel_to_sql_case () {
-    # convert camel to snake case
-    sql_case=$(sed -E "s/([A-Z]+)/_\1/g" <<< "${1}")
-    # set all lowercase to uppercase
-    sql_case=$(tr '[:lower:]' '[:upper:]' <<< "${sql_case}")
-    # remove any leading underscores
-    sql_case=${sql_case#_}
-    echo "${sql_case}"
-    sql_case=""
-}
-
-# $1 string that you want to make the first letter lowercase
-lower_first () {
-    output=""
-    output=$(echo ${1:0:1} | tr '[A-Z]' '[a-z]')${1:1}
-    echo "${output}"
-    output=""
-}
+dir=${0%/*}
+source ${dir}/functions.sh
 
 declare -a model_name_arr model_pk_arr
 # $1 model_name
@@ -75,64 +20,6 @@ get_pk_for_model_name () {
     output=""
 }
 
-# $1=Type $2=fieldName $3=type.properties $4=pk
-build_column_annotation () {
-    field_sql_case=$(convert_camel_to_sql_case "$2")
-    prop_key=""
-    replacement_string=""
-    # if the annotation is a primary key, use that one, otherwise try to find it.
-    if [[ "$2" = "$4" ]]; then
-        prop_key="pk"
-        replacement_string="${table_name_sql_case}"
-    else 
-        prop_key="$1"
-        replacement_string="${field_sql_case}"
-    fi
-    # get annotation value out of properties file
-    annotation=$(grep "${prop_key}=" "$3"  | cut -f2- -d'=')
-    # if no annotation entry for Type in properties file, use default annotation
-    if [[ -z "${annotation}" ]]; then
-        annotation="    @Column( name = \"%\" )"
-    fi
-    # replace the annotation placeholder for the field with the annotation.
-    annotation="${annotation//\%/${replacement_string}}"
-    echo "${annotation}"
-    annotation=""
-}
-
-declare g a p model_path
-generate_maven_project () {
-    GAV_string=$(yq r $1 "archetypeGAV")
-    GAV_arr=(${GAV_string//:/ })
-    gav_string=$(yq r $1 "generatedGav")
-    gav_arr=(${gav_string//:/ })
-    author=$(yq r $1 "author")
-
-    g=${gav_arr[0]}
-    a=${gav_arr[1]}
-    v=${gav_arr[2]}
-    p=$g.${a//-/.}
-
-    # handle user not giving a version number
-    vv=''
-    if [[ -n "$v" ]]; then
-      vv="-Dversion=";
-    fi
-
-    mvn archetype:generate                     \
-      -DarchetypeGroupId="${GAV_arr[0]}"       \
-      -DarchetypeArtifactId="${GAV_arr[1]}"    \
-      -DarchetypeVersion="${GAV_arr[2]}"       \
-      -DgroupId="$g"                           \
-      -DartifactId="$a"                        \
-      -Dpackage="$g.${a//-/.}"                 \
-      -Dclass0="class0"                        \
-      -Dfields="fields"                        \
-      -Dauthor="$author"                       \
-      -B                                       \
-      $vv$v
-}
-
 # for each document in the yaml file
  # generate the maven project (build existing java file url.)
  # create new models based on template
@@ -142,19 +29,19 @@ generate_maven_project () {
   # TODO update imports for fields.
  # delete placeholder model
 
-generate_maven_project $1
+declare g a
+generate_maven_project $1 $2 g a
 
 model_path=${a}/src/main/java/${g//./\/}/${a//-/\/}
 
 class_content=$(<$model_path/class0.java)
 
-num_models=$(yq r $1 "model" -l)
+num_models=$(yq r -d$2 $1 "model" -l)
 
-dir=${0%/*}
 for (( i=0; i<${num_models}; i++ ))
 do
     # create java class at template location
-    model_name=$(yq r $1 "model[${i}].name")
+    model_name=$(yq r -d$2 $1 "model[${i}].name")
     model_path_name=${model_path}/${model_name}.java
     echo "model_name${i}: ${model_name}"
 
@@ -168,25 +55,11 @@ do
     table_name_sql_case=$(convert_camel_to_sql_case "${table_name}")
     sed -i.bak "s/entity_name/${table_name_sql_case}/" "${model_path_name}" && rm "${model_path_name}.bak"
 
-
     # replace fields with generated fields.
-    fields=$(yq r $1 "model[${i}].fields[*]")
+    fields=$(yq r -d$2 $1 "model[${i}].fields[*]")
+    pk_field=$(yq r -d$2 $1 "model[${i}].pk")
 
-    echo "fields: ${fields}"
-
-    get_fields_and_types "${fields}"
-
-    create_field_string "${fields}"
-
-    create_field_string_with_annotations "${field_string}"
-
-    pk_field=$(yq r $1 "model[${i}].pk")
-    # replace all the annotation placeholders with the real annotations
-    for (( j=0; j<"${#field_arr[@]}"; j++ ))
-    do
-        ann=$(build_column_annotation ${type_arr[j]} ${field_arr[j]} ${dir}/jpa_type_annotation.properties ${pk_field})
-        field_string="${field_string/&\%${field_arr[j]}&\%/${ann}}"
-    done
+    field_string=$(${dir}/create_fields_with_annotations.sh "${fields}" "${pk_field}")
 
     # replace newline with carrots in field_string because sed has problem processing \n
     # shouldn't need to do this here, but if there is an error, some newlines could make their way through.
@@ -204,15 +77,15 @@ done
 rm ${model_path}/class0.java
 
 # get joins
-joins=$(yq r $1 "joins[*]")
-num_joins=$(yq r $1 "joins" -l)
+joins=$(yq r -d$2 $1 "joins[*]")
+num_joins=$(yq r -d$2 $1 "joins" -l)
 echo "joins: ${joins}"
 echo "num_joins: ${num_joins}"
 
 #set modelnames to pk mappings
-model_names=$(yq r $1 "model[*].name")
+model_names=$(yq r -d$2 $1 "model[*].name")
 model_name_arr=(${model_names})
-model_pks=$(yq r $1 "model[*].pk")
+model_pks=$(yq r -d$2 $1 "model[*].pk")
 model_pk_arr=(${model_pks})
 
 # create 3 arrays from joins.
