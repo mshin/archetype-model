@@ -7,6 +7,9 @@ source ${dir}/../common_scripts/functions.sh
 
 create_fields_url=${dir}/create_entity_fields_w_annotations.sh
 join_prop_url=${dir}/jpa_join_annotation.properties
+type_converter_gav_url=${dir}/type_converter_gav.txt
+local_date_converter="com.github.mshin.jpa.type.converter.LocalDateAttributeConverter"
+local_date_time_converter="com.github.mshin.jpa.type.converter.LocalDateTimeAttributeConverter"
 
 declare -a model_name_arr model_pk_arr
 # $1 model_name
@@ -266,6 +269,14 @@ do
 
     fi
 done
+
+# If converter in files, then add that dependency.
+grep_result=$(grep "${local_date_converter}\|${local_date_time_converter}" -r $a --include "*.java")
+if [[ -n "${grep_result}" ]]
+then
+	# add dependency gav text to pom
+	sed -i.bak -e "/<dependencies>/r ${type_converter_gav_url}" $a/pom.xml && rm "$a/pom.xml.bak"
+fi
 
 # call formatter on project
 beautify_imports "$a" "${model_path}"

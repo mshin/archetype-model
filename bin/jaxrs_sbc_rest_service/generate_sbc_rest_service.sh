@@ -113,7 +113,7 @@ si_methods=$(echo ${si_methods} | tr -d '(')
 si_methods_arr=(${si_methods})
 
 # build .when() string
-when_string=$(grep "when=" "${camel_route_choice_url}"  | cut -f2- -d'=')
+when_string=$(grep "^when=" "${camel_route_choice_url}"  | cut -f2- -d'=')
 
 # for each method, append a new when string, replacing %0 placeholder with method name.
 declare route_string

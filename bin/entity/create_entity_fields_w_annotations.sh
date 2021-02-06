@@ -22,8 +22,9 @@ build_entity_column_annotation () {
         prop_key="$1"
         replacement_string="${field_sql_case}"
     fi
-    # get annotation value out of properties file
-    annotation=$(grep "${prop_key}=" "$3"  | cut -f2- -d'=')
+    # >&2 echo "prop_key:${prop_key} fieldName: ${2}"
+    # get annotation value out of properties file; strip type package info if present.
+    annotation=$(grep "^${prop_key##*.}=" "$3"  | cut -f2- -d'=')
     # if no annotation entry for Type in properties file, use default annotation
     if [[ -z "${annotation}" ]]; then
         annotation="    @javax.persistence.Column( name = \"%\" )"

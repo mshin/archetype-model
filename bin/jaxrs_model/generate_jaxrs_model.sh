@@ -28,7 +28,7 @@ class_content=$(<$model_path/class0.java)
 
 num_models=$(yq r -d$2 $1 "model" -l)
 
-annotation=$(grep "field=" "${jax_ann_prop_url}"  | cut -f2- -d'=')
+annotation=$(grep "^field=" "${jax_ann_prop_url}"  | cut -f2- -d'=')
 
 for (( i=0; i<${num_models}; i++ ))
 do
