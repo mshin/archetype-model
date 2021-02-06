@@ -1,9 +1,10 @@
 #!/bin/bash
 
-source ${0%/*}/functions.sh
-source ${0%/*}/field_functions.sh
+dir=${0%/*}
+source ${dir}/../common_scripts/functions.sh
+source ${dir}/../common_scripts/field_functions.sh
 
-jpa_ann_prop_url=${0%/*}/jpa_type_annotation.properties
+jpa_ann_prop_url=${dir}/jpa_type_annotation.properties
 
 fields=$1
 pk_field=$2

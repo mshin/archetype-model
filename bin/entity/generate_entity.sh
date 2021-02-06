@@ -3,7 +3,7 @@
 # $1: yaml descriptor path; $2 document number
 
 dir=${0%/*}
-source ${dir}/functions.sh
+source ${dir}/../common_scripts/functions.sh
 
 create_fields_url=${dir}/create_entity_fields_w_annotations.sh
 join_prop_url=${dir}/jpa_join_annotation.properties

@@ -3,8 +3,10 @@
 # $1: yaml descriptor path; $2 document number
 
 dir=${0%/*}
-source ${dir}/functions.sh
-source ${dir}/field_functions.sh
+source ${dir}/../common_scripts/functions.sh
+source ${dir}/../common_scripts/field_functions.sh
+
+jax_ann_prop_url=${dir}/jaxrs_field_annotation.properties
 
 declare -a model_name_arr
 
@@ -26,7 +28,7 @@ class_content=$(<$model_path/class0.java)
 
 num_models=$(yq r -d$2 $1 "model" -l)
 
-annotation=$(grep "field=" "${dir}/jaxrs_field_annotation.properties"  | cut -f2- -d'=')
+annotation=$(grep "field=" "${jax_ann_prop_url}"  | cut -f2- -d'=')
 
 for (( i=0; i<${num_models}; i++ ))
 do

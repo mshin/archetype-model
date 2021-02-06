@@ -4,9 +4,9 @@
 
 dir=${0%/*}
 
-source ${dir}/functions.sh
+source ${dir}/../common_scripts/functions.sh
 
-cp_pl_url=${dir}/maven-cp.pl
+cp_pl_url=${dir}/../common_scripts/maven-cp.pl
 camel_route_choice_url=${dir}/camel_route_choice.properties
 gen_impl_class="com.github.mshin.generate.impl.GenerateImplService"
 spring_component_ann="@org.springframework.stereotype.Component"

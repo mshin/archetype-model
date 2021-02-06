@@ -3,8 +3,8 @@
 # $1: yaml descriptor path; $2 document number
 
 dir=${0%/*}
-source ${dir}/functions.sh
-source ${dir}/field_functions.sh
+source ${dir}/../common_scripts/functions.sh
+source ${dir}/../common_scripts/field_functions.sh
 
 
 # for each document in the yaml file

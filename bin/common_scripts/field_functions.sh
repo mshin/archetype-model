@@ -2,7 +2,7 @@
 
 declare -a type_arr field_arr
 
-type_properties_url="${0%/*}/java_se_types.properties"
+type_properties_url="${0%/*}/../java_type.properties"
 
 # $1 fields
 get_fields_and_types () {
