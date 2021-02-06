@@ -3,6 +3,8 @@
 source ${0%/*}/functions.sh
 source ${0%/*}/field_functions.sh
 
+jpa_ann_prop_url=${0%/*}/jpa_type_annotation.properties
+
 fields=$1
 pk_field=$2
 
@@ -23,7 +25,7 @@ build_entity_column_annotation () {
     annotation=$(grep "${prop_key}=" "$3"  | cut -f2- -d'=')
     # if no annotation entry for Type in properties file, use default annotation
     if [[ -z "${annotation}" ]]; then
-        annotation="    @Column( name = \"%\" )"
+        annotation="    @javax.persistence.Column( name = \"%\" )"
     fi
     # replace the annotation placeholder for the field with the annotation.
     annotation="${annotation//\%/${replacement_string}}"
@@ -32,15 +34,12 @@ build_entity_column_annotation () {
 }
 
 get_fields_and_types "${fields}"
-
-field_string=$(create_field_string "${fields}")
-
-field_string=$(create_field_string_with_annotations "${field_string}")
+field_string=$(create_field_string "true")
 
 # replace all the annotation placeholders with the real annotations
 for (( j=0; j<"${#field_arr[@]}"; j++ ))
 do
-    ann=$(build_entity_column_annotation ${type_arr[j]} ${field_arr[j]} ${0%/*}/jpa_type_annotation.properties ${pk_field})
+    ann=$(build_entity_column_annotation ${type_arr[j]} ${field_arr[j]} ${jpa_ann_prop_url} ${pk_field})
     field_string="${field_string/&\%${field_arr[j]}&\%/${ann}}"
 done
 

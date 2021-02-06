@@ -5,6 +5,9 @@
 dir=${0%/*}
 source ${dir}/functions.sh
 
+create_fields_url=${dir}/create_entity_fields_w_annotations.sh
+join_prop_url=${dir}/jpa_join_annotation.properties
+
 declare -a model_name_arr model_pk_arr
 # $1 model_name
 get_pk_for_model_name () {
@@ -59,7 +62,7 @@ do
     fields=$(yq r -d$2 $1 "model[${i}].fields[*]")
     pk_field=$(yq r -d$2 $1 "model[${i}].pk")
 
-    field_string=$(${dir}/create_entity_fields_w_annotations.sh "${fields}" "${pk_field}")
+    field_string=$(${create_fields_url} "${fields}" "${pk_field}")
 
     # replace newline with carrots in field_string because sed has problem processing \n
     # shouldn't need to do this here, but if there is an error, some newlines could make their way through.
@@ -233,7 +236,7 @@ do
         fi
 
         # get annotation from file ()
-        join_ref_ann=$(get_join_ref_ann "${ann_var}" "${dir}/jpa_join_annotation.properties")
+        join_ref_ann=$(get_join_ref_ann "${ann_var}" "${join_prop_url}")
 
         # write the annotation string to file.
         write_join_ann_to_file "${join_ref_ann}" "${model_path}" "${entity2_arr[$i]}"
@@ -256,17 +259,18 @@ do
         fi
 
         # get annotation from file ()
-        join_ref_ann=$(get_join_ref_ann "${ann_var}" "${dir}/jpa_join_annotation.properties")
+        join_ref_ann=$(get_join_ref_ann "${ann_var}" "${join_prop_url}")
 
         # write the annotation string to file.
         write_join_ann_to_file "${join_ref_ann}" "${model_path}" "${entity0_arr[$i]}"
 
     fi
 done
+
+# call formatter on project
+beautify_imports "$a" "${model_path}"
+
 # decipher data in operator
-
-
-
 
 # fill out name variables
 # for each join, determine owner and relationship

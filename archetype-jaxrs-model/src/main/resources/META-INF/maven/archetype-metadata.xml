@@ -12,7 +12,7 @@
             <!-- validationRegex / -->
         </requiredProperty>
         <requiredProperty key="class0">
-            <defaultValue>DomainModel</defaultValue>
+            <defaultValue>JaxrsModel</defaultValue>
             <!-- validationRegex / -->
         </requiredProperty>
         <requiredProperty key="author">

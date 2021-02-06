@@ -6,6 +6,7 @@ dir=${0%/*}
 source ${dir}/functions.sh
 source ${dir}/field_functions.sh
 
+declare -a model_name_arr
 
 # for each document in the yaml file
  # generate the maven project (build existing java file url.)
@@ -25,6 +26,7 @@ class_content=$(<$model_path/class0.java)
 
 num_models=$(yq r -d$2 $1 "model" -l)
 
+annotation=$(grep "field=" "${dir}/jaxrs_field_annotation.properties"  | cut -f2- -d'=')
 
 for (( i=0; i<${num_models}; i++ ))
 do
@@ -41,9 +43,17 @@ do
     # replace fields with generated fields.
     fields=$(yq r -d$2 $1 "model[${i}].fields[*]")
     get_fields_and_types "${fields}"
-    field_string=$(create_field_string "false")
+    field_string=$(create_field_string "true")
 
-    #replace newline with carrots in field_string because sed has problem processing \n
+    # replace all the annotation placeholders with the real annotations
+    for (( j=0; j<"${#field_arr[@]}"; j++ ))
+    do
+        ann="${annotation/\%/${field_arr[j]}}"
+        field_string="${field_string/&\%${field_arr[j]}&\%/${ann}}"
+    done
+
+    # replace newline with carrots in field_string because sed has problem processing \n
+    # shouldn't need to do this here, but if there is an error, some newlines could make their way through.
     field_string=${field_string//$'\n'/^}
 
     # replace fields placeholder in java class with actual fields with ^
@@ -59,5 +69,7 @@ rm ${model_path}/class0.java
 
 # call formatter on project
 beautify_imports "$a" "${model_path}"
+
+mvn clean install -f $a/pom.xml
 
 exit 0

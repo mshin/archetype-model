@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>lombok-model</module>
+        <!--module>lombok-model</module-->
         <module>archetype-domain-model</module>
         <module>archetype-rest-model</module>
         <module>archetype-entity</module>

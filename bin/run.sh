@@ -36,7 +36,6 @@ do
 	script=$(get_property ${prop_key} ${map_url})
 	
 	eval "${dir}/${script} $1 $i"
-
 done
 
 exit 0

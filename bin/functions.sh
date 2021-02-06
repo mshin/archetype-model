@@ -55,3 +55,21 @@ generate_maven_project () {
       -B                                       \
       $vv$v
 }
+
+# $1 artifactId (a), $2 class file path (${class_file_path})
+beautify_imports () {
+	# call formatter on project
+	mvn org.andromda.maven.plugins:andromda-beautifier-plugin:beautify-imports -f $1/pom.xml
+
+	# need to clean \r from all java files due to andromda beautifier.
+
+	# get all java files in project beautified.
+	java_files_arr=($(find $1 -name '*.java'))
+
+	for file in "${java_files_arr[@]}"
+	do
+	    # remove \r to be consistent with rest of files
+		# copying to java source dir even for classes not there because we know we have write privileges there.
+	    tr -d '\r' < "${file}" > "$2/temp.java" && mv "$2/temp.java" "${file}"
+	done
+}

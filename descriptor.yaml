@@ -3,6 +3,27 @@
 #    modelName:(list)
 #      typeField:(list)(colon delimited)
 #      imports:(calculated list)(colon delimited)
+---
+archetypeGAV: com.github.mshin:archetype-jaxrs-model:0.0.1
+generatedGav: com.github.mshin:my-jaxrs-model:1.0.0
+author: MunChul Shin
+model:
+    - name: JaxrsModel0
+      fields:
+          - BigDecimal:field1
+          - ArrayList:field2
+          - Map<BigDecimal, List<BigDecimal>>:field3
+    - name: JaxrsModel1
+      fields:
+          - Integer:field1
+          - String:field2
+          - Date:field3
+---
+archetypeGAV: com.github.mshin:jaxrms-springboot-camel-archetype:1.0.0
+generatedGav: com.github.mshin:adams-service-impl
+author: Adam S
+serviceInterfaceGav: com.github.mshin:jaxrms-crud-rs-api:1.0.3
+serviceInterface: com.github.mshin.jaxrms.crud.rs.api.JaxrmsCrudService
 
 ---
 archetypeGAV: com.github.mshin:archetype-entity:0.0.1
