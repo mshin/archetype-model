@@ -60,4 +60,6 @@ rm ${model_path}/class0.java
 # call formatter on project
 beautify_imports "$a" "${model_path}"
 
+mvn clean install -f $a/pom.xml
+
 exit 0

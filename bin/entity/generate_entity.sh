@@ -270,6 +270,8 @@ done
 # call formatter on project
 beautify_imports "$a" "${model_path}"
 
+mvn clean install -f $a/pom.xml
+
 # decipher data in operator
 
 # fill out name variables
