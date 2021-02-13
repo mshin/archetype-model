@@ -1,11 +1,7 @@
-# GAV:(list)(colon delimited)
-#  gav:(list)(colon delimited)
-#    modelName:(list)
-#      typeField:(list)(colon delimited)
-#      imports:(calculated list)(colon delimited)
+# This descriptor would generate 4 projects.
 ---
 archetypeGAV: com.github.mshin:archetype-jaxrs-model:0.0.1
-generatedGav: com.github.mshin:my-jaxrs-model:1.0.0
+generatedGav: com.github.mshin:example-jaxrs-model:1.0.0
 author: MunChul Shin
 model:
     - name: JaxrsModel0
@@ -20,14 +16,14 @@ model:
           - Date:field3
 ---
 archetypeGAV: com.github.mshin:jaxrms-springboot-camel-archetype:1.0.0
-generatedGav: com.github.mshin:adams-service-impl
-author: Adam S
+generatedGav: com.github.mshin:example-service-impl
+author: MunChul Shin
 serviceInterfaceGav: com.github.mshin:jaxrms-crud-rs-api:1.0.3
 serviceInterface: com.github.mshin.jaxrms.crud.rs.api.JaxrmsCrudService
 
 ---
 archetypeGAV: com.github.mshin:archetype-entity:0.0.1
-generatedGav: com.github.mshin:my-entity
+generatedGav: com.github.mshin:example-entity
 author: MunChul Shin
 model:
     - name: AccountEntity
@@ -82,27 +78,27 @@ joins:
     - AppEntity <n-n> UserEntity
 ---
 archetypeGAV: com.github.mshin:archetype-domain-model:0.0.1
-generatedGav: com.github.mshin:my-domain-model
+generatedGav: com.github.mshin:example-domain-model
 author: MunChul Shin
 model:
     - name: DomainModel0
       fields:
-          - String:Field1
-          - String:Field2
-          - Integer:Field3
+          - String:field1
+          - String:field2
+          - Integer:field3
     - name: DomainModel1
       fields:
-          - Integer:Field1
-          - String:Field2
-          - boolean:Field3
-          - int:Field4
+          - Integer:field1
+          - String:field2
+          - boolean:field3
+          - int:field4
     - name: Cookies
       fields:
           - String:tastiness
           - String:type
           - boolean:isGood
           - int:calories
-    - name: TslaStock
+    - name: Stock
       fields:
           - Date:acquired
           - Integer:value
