@@ -25,7 +25,6 @@ class_content=$(<$model_path/class0.java)
 
 num_models=$(yq r -d$2 $1 "model" -l)
 
-
 for (( i=0; i<${num_models}; i++ ))
 do
     # create java class at template location
@@ -56,6 +55,44 @@ done
 
 # delete placeholder model
 rm ${model_path}/class0.java
+
+enum_content=$(<$model_path/class1.java)
+
+num_enums=$(yq r -d$2 $1 "enum" -l)
+
+
+for (( i=0; i<${num_enums}; i++ ))
+do
+    # create java class at template location
+    enum_name=$(yq r -d$2 $1 "enum[${i}].name")
+    enum_path_name=${model_path}/${enum_name}.java
+    echo "enum_name${i}: ${enum_name}"
+
+    cp ${model_path}/class1.java "$enum_path_name"
+
+    # set the class name in the file to the correct value.
+    sed -i.bak "s/class1/${enum_name}/" "${enum_path_name}" && rm "${enum_path_name}.bak"
+
+    # replace enum paceholder with generated enum values.
+    # get enums from yaml
+    enums=$(yq r -d$2 $1 "enum[${i}].values[*]")
+    # put enum list delimited with newline into an array.
+    enum_arr=(${enums})
+    # add comma to the end of every element of array.
+    enum_arr=( "${enum_arr[@]/%/,}" )
+    # print out array as new single string. each element is delimted with a space.
+    enum_list=$(echo "${enum_arr[@]}")
+    # replace last character of enum_list (a comma) with a semicolon.
+    enum_list=$(echo "${enum_list%?};")
+    echo "$enum_list"
+
+    # replace enum placeholder in java class with actual enums
+    sed -i.bak "s/^    enumerations/${enum_list}/" "${enum_path_name}" && rm "${enum_path_name}.bak"
+
+done
+
+# delete placeholder enum
+rm ${model_path}/class1.java
 
 # call formatter on project
 beautify_imports "$a" "${model_path}"

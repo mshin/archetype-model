@@ -50,7 +50,9 @@ generate_maven_project () {
       -DartifactId="${artifiactId}"            \
       -Dpackage="$groupId.${artifiactId//-/.}" \
       -Dclass0="class0"                        \
+      -Dclass1="class1"                        \
       -Dfields="fields"                        \
+      -Denumerations="enumerations"            \
       -Dauthor="$author"                       \
       -B                                       \
       $vv$v

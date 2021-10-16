@@ -1,4 +1,26 @@
-# This descriptor would generate 4 projects.
+# This descriptor would generate 5 projects.
+#---
+#archetypeGAV: com.github.mshin:jaxrms-rs-api-archetype:0.0.1
+#generatedGav: com.github.mshin:jaxrms-emprogen-crud-rs-api:1.0.0
+#author: MunChul Shin
+#serviceInterfaceName: JaxrmsEmprogenCrudService
+#method:
+#    - http: POST
+#      path: post
+#      description: 'This API method will be used to create a name record.'
+#      consumes: MediaType.APPLICATION_JSON
+#      produces: MediaType.APPLICATION_JSON
+#      returnType: PostNameResponse
+#      method: postName
+#      throws:
+#          - throwable: ExceptionResponses
+#      args:
+#          - var: postNameRequest
+#            type: PostNameRequest
+#            required: true
+#            description: 'The request to create a name record.'
+#            displayName: PostNameRequest
+
 ---
 archetypeGAV: com.github.mshin:archetype-jaxrs-model:0.0.1
 generatedGav: com.github.mshin:example-jaxrs-model:1.0.0
@@ -15,7 +37,7 @@ model:
           - String:field2
           - Date:field3
 ---
-archetypeGAV: com.github.mshin:jaxrms-springboot-camel-archetype:1.0.0
+archetypeGAV: com.github.mshin:jaxrms-springboot-camel-archetype:1.0.1
 generatedGav: com.github.mshin:example-service-impl
 author: MunChul Shin
 serviceInterfaceGav: com.github.mshin:jaxrms-crud-rs-api:1.0.3
