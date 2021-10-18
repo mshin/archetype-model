@@ -135,6 +135,18 @@ sed -i.bak "s/${sp}/${sp}^${route_string}/" "${route_path}" && rm "${route_path}
 # use tr (translate) command to replace carrot with newline in java file.
 tr ^ '\n' < "${route_path}" > "${class_file_path}/temp.java" && mv "${class_file_path}/temp.java" "${route_path}"
 
+# count the addtl. dependencies.
+num_addtl_dependencies=$(yq r -d$2 $1 "dependencyGav" -l)
+# for each addtl. dependency...
+for (( i=0; i<${num_addtl_dependencies}; i++ ))
+do
+    # get the gav string
+    dependency_gav_string=$(yq r -d$2 $1 "dependencyGav[${i}].gav")
+
+    # add the dependency to the pom.
+    add_dependency "$dependency_gav_string" "${a}/pom.xml"
+done
+
 # call formatter on project
 beautify_imports "$a" "${class_file_path}"
 

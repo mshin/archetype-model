@@ -69,6 +69,18 @@ done
 # delete placeholder model
 rm ${model_path}/class0.java
 
+# count the addtl. dependencies.
+num_addtl_dependencies=$(yq r -d$2 $1 "dependencyGav" -l)
+# for each addtl. dependency...
+for (( i=0; i<${num_addtl_dependencies}; i++ ))
+do
+    # get the gav string
+    dependency_gav_string=$(yq r -d$2 $1 "dependencyGav[${i}].gav")
+
+    # add the dependency to the pom.
+    add_dependency "$dependency_gav_string" "${a}/pom.xml"
+done
+
 # call formatter on project
 beautify_imports "$a" "${model_path}"
 

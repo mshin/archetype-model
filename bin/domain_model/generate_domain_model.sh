@@ -23,6 +23,7 @@ model_path=${a}/src/main/java/${g//./\/}/${a//-/\/}
 
 class_content=$(<$model_path/class0.java)
 
+# fix if models not present
 num_models=$(yq r -d$2 $1 "model" -l)
 
 for (( i=0; i<${num_models}; i++ ))
@@ -60,7 +61,7 @@ enum_content=$(<$model_path/class1.java)
 
 num_enums=$(yq r -d$2 $1 "enum" -l)
 
-
+# fix if enums not present.
 for (( i=0; i<${num_enums}; i++ ))
 do
     # create java class at template location
@@ -93,6 +94,20 @@ done
 
 # delete placeholder enum
 rm ${model_path}/class1.java
+
+# add addtl. dependencies to the project pom.
+
+# count the addtl. dependencies.
+num_addtl_dependencies=$(yq r -d$2 $1 "dependencyGav" -l)
+# for each addtl. dependency...
+for (( i=0; i<${num_addtl_dependencies}; i++ ))
+do
+    # get the gav string
+    dependency_gav_string=$(yq r -d$2 $1 "dependencyGav[${i}].gav")
+
+    # add the dependency to the pom.
+    add_dependency "$dependency_gav_string" "${a}/pom.xml"
+done
 
 # call formatter on project
 beautify_imports "$a" "${model_path}"

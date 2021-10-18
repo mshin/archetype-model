@@ -278,6 +278,18 @@ then
 	sed -i.bak -e "/<dependencies>/r ${type_converter_gav_url}" $a/pom.xml && rm "$a/pom.xml.bak"
 fi
 
+# count the addtl. dependencies.
+num_addtl_dependencies=$(yq r -d$2 $1 "dependencyGav" -l)
+# for each addtl. dependency...
+for (( i=0; i<${num_addtl_dependencies}; i++ ))
+do
+    # get the gav string
+    dependency_gav_string=$(yq r -d$2 $1 "dependencyGav[${i}].gav")
+
+    # add the dependency to the pom.
+    add_dependency "$dependency_gav_string" "${a}/pom.xml"
+done
+
 # call formatter on project
 beautify_imports "$a" "${model_path}"
 

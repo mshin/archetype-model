@@ -1,4 +1,5 @@
 # This descriptor would generate 5 projects.
+
 #---
 #archetypeGAV: com.github.mshin:jaxrms-rs-api-archetype:0.0.1
 #generatedGav: com.github.mshin:jaxrms-emprogen-crud-rs-api:1.0.0
