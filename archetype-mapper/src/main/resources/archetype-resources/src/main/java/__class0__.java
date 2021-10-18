@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
  * Use the annotations below to map fields that do not have the same name.
  *    @Mappings( { 
  *        @Mapping( source = "fromObjectValue", target = "toObjectValue" ), 
- *        @Mapping( source =  "", target = "")} )
+ *        @Mapping( source =  "homeAddressStreet", target = "contactInfo.address.street")} )
  *     ToObject map( FromObject fromObject );
 */
 /**

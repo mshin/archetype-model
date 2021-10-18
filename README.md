@@ -12,3 +12,4 @@ run script: https://github.com/mshin/archetype-model/bin/run.sh with passing in 
 https://github.com/mshin/archetype-model/blob/main/descriptor.yaml
 
 
+need to use yp version 3.xx. Version 4.xx doesn't work.
